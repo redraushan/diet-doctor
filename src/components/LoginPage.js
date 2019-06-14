@@ -2,7 +2,6 @@ import React from "react";
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-
 import { userActions } from "../actions";
 
 export class LoginPage extends Component {
@@ -28,6 +27,8 @@ export class LoginPage extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const { username, password } = this.state;
+    userActions.login(username, password);
     this.setState(() => ({ submitted: true }));
   }
 
