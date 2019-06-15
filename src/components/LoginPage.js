@@ -81,6 +81,9 @@ class LoginPage extends Component {
           </div>
           <div className="form-group">
             <button className="btn btn-primary">Login</button>
+            <Link to="/register" className="btn btn-link">
+              Register
+            </Link>
           </div>
         </form>
       </div>

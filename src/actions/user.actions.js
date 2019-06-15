@@ -19,9 +19,10 @@ function login(username, password) {
     request({ username, password });
     userService.login(username, password).then(
       user => {
-        dispatch(success(user));
+        const { ok } = user;
+        dispatch(success(ok));
         setUserToLocalStorage(user);
-        console.log({ user });
+        console.log({ ok });
       },
       error => {
         dispatch(failure(error));
@@ -48,6 +49,20 @@ function logout() {
 function register(user) {
   // return the promise using fetch which dispatches appropriately
 
+  return dispatch => {
+    request(user);
+    userService.register(user).then(
+      user => {
+        dispatch(success(user));
+        setUserToLocalStorage(user);
+        console.log({ user });
+      },
+      error => {
+        dispatch(failure(error));
+        console.log({ error });
+      }
+    );
+  };
   function request(user) {
     return { type: userConstants.REGISTER_REQUEST, user };
   }
