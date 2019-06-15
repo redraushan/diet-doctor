@@ -3,8 +3,9 @@ import { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
+import { userService } from "../services";
 
-export class LoginPage extends Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props);
 
@@ -28,14 +29,22 @@ export class LoginPage extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { username, password } = this.state;
-    userActions.login(username, password);
+    const { login } = this.props;
+
+    if (username && password) {
+      login(username, password);
+    }
     this.setState(() => ({ submitted: true }));
   }
 
   render() {
     const { username, password, submitted } = this.state;
+    const { error, success } = this.props;
     return (
       <div className="col-md-6 col-md-offset-3">
+        {submitted && error
+          ? userService.alertUser(error, "error")
+          : userService.alertUser(success, "success")}
         <h2>Login</h2>
         <form name="form" onSubmit={this.handleSubmit}>
           <div
@@ -79,6 +88,24 @@ export class LoginPage extends Component {
   }
 }
 
-function mapStateToProps(state) {}
+function mapStateToProps(state) {
+  return {
+    loggedIn: state.loggedIn,
+    user: state.user,
+    error: state.authentication.error,
+    success: state.authentication.success
+  };
+}
 
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (username, password) =>
+      dispatch(userActions.login(username, password))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginPage);
 export { LoginPage as TestLoginPage };

@@ -1,7 +1,9 @@
+import React from "react";
 export const userService = {
   login,
   logout,
-  register
+  register,
+  alertUser
 };
 
 function login(username, password) {
@@ -35,4 +37,14 @@ function handleResponse(response) {
   }
 
   return response.json();
+}
+
+function alertUser(message, type) {
+  let alertType = type === "success" ? "alert-success" : "alert-danger";
+  if (!message || !type) return null;
+  return (
+    <div className={`alert ${alertType}`} role="alert">
+      {message}
+    </div>
+  );
 }

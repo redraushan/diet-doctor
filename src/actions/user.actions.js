@@ -15,16 +15,20 @@ function setUserToLocalStorage(user) {
 
 function login(username, password) {
   // return the promise using fetch which adds to localstorage on resolve
-  request({ username, password });
-  userService.login(username, password).then(
-    user => {
-      success(user);
-      setUserToLocalStorage(user);
-    },
-    error => {
-      failure(error);
-    }
-  );
+  return dispatch => {
+    request({ username, password });
+    userService.login(username, password).then(
+      user => {
+        dispatch(success(user));
+        setUserToLocalStorage(user);
+        console.log({ user });
+      },
+      error => {
+        dispatch(failure(error));
+        console.log({ error });
+      }
+    );
+  };
 
   function request(user) {
     return { type: userConstants.LOGIN_REQUEST, user };
