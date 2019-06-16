@@ -3,6 +3,7 @@ export const userService = {
   login,
   logout,
   register,
+  isLoading,
   alertUser
 };
 
@@ -47,4 +48,16 @@ function alertUser(message, type) {
       {message}
     </div>
   );
+}
+
+function isLoading(loading) {
+  if (loading) {
+    return (
+      <img
+        src="../../spinner.gif"
+        style={{ width: "20px", marginLeft: "12px" }}
+      />
+    );
+  }
+  return null;
 }

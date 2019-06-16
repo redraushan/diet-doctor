@@ -2,8 +2,9 @@ import React from "react";
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { history } from "../helpers";
 import { userActions } from "../actions";
+import { userService } from "../services";
 
 class RegisterPage extends Component {
   constructor(props) {
@@ -16,24 +17,16 @@ class RegisterPage extends Component {
       },
       submitted: false
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    // handle input change and dispatch register
+  handleChange = event => {
     const { name, value } = event.target;
-    this.setState(
-      () => ({ user: { ...this.state.user, [name]: value, submitted: false } }),
-      () => {
-        console.log(this.state);
-      }
-    );
-  }
+    this.setState(() => ({
+      user: { ...this.state.user, [name]: value, submitted: false }
+    }));
+  };
 
-  handleSubmit(event) {
-    // handle button click and dispatch register
+  handleSubmit = event => {
     event.preventDefault();
     const { username, password } = this.state.user;
     const { register } = this.props;
@@ -42,10 +35,12 @@ class RegisterPage extends Component {
       register(username, password);
     }
     this.setState(() => ({ submitted: true }));
-  }
+  };
 
   render() {
     const { user, submitted } = this.state;
+    const { registering } = this.props;
+
     return (
       <div className="col-md-6 col-md-offset-3">
         <h2>Register</h2>
@@ -83,8 +78,15 @@ class RegisterPage extends Component {
             )}
           </div>
           <div className="form-group">
-            <button className="btn btn-primary">Register</button>
-            <Link to="/login" className="btn btn-link">
+            <button type="submit" className="btn btn-primary">
+              Register
+            </button>
+            {userService.isLoading(registering)}
+            <Link
+              to="/login"
+              onClick={console.log("asdfds")}
+              className="btn btn-link"
+            >
               Cancel
             </Link>
           </div>
@@ -101,7 +103,16 @@ const mapDispatchToProps = dispatch => {
   };
 };
 // complete the below function
-function mapStateToProps(state) {}
+function mapStateToProps(state) {
+  const { error, success, registering, user } = state.registration;
+  console.log(state);
+  return {
+    error,
+    registering,
+    user,
+    success
+  };
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

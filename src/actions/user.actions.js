@@ -13,20 +13,25 @@ function setUserToLocalStorage(user) {
   localStorage.setItem("user", JSON.stringify(user));
 }
 
+function clearUserFromLocalStorage() {
+  localStorage.removeItem("user");
+}
+
 function login(username, password) {
-  // return the promise using fetch which adds to localstorage on resolve
   return dispatch => {
-    request({ username, password });
+    dispatch(request({ username, password }));
     userService.login(username, password).then(
       user => {
-        const { ok } = user;
-        dispatch(success(ok));
-        setUserToLocalStorage(user);
-        console.log({ ok });
+        if (user.ok) {
+          dispatch(success(user.json()));
+          dispatch(alertActions.success());
+          setUserToLocalStorage(user);
+          history.push("/");
+        }
       },
       error => {
         dispatch(failure(error));
-        console.log({ error });
+        dispatch(alertActions.error(error));
       }
     );
   };
@@ -43,23 +48,23 @@ function login(username, password) {
 }
 
 function logout() {
-  // complete this function
+  clearUserFromLocalStorage();
+  history.push("/login");
 }
 
 function register(user) {
-  // return the promise using fetch which dispatches appropriately
-
   return dispatch => {
-    request(user);
+    dispatch(request(user));
     userService.register(user).then(
-      user => {
+      () => {
         dispatch(success(user));
+        dispatch(alertActions.success("Registration successful!"));
+        history.push("/login");
         setUserToLocalStorage(user);
-        console.log({ user });
       },
       error => {
         dispatch(failure(error));
-        console.log({ error });
+        dispatch(alertActions.error(error));
       }
     );
   };

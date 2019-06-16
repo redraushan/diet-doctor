@@ -1,6 +1,7 @@
 import React from "react";
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { history } from "../helpers/history";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
 import { userService } from "../services";
@@ -16,17 +17,14 @@ class LoginPage extends Component {
       password: "",
       submitted: false
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
+  handleChange = e => {
     const { name, value } = e.target;
     this.setState(() => ({ [name]: value, submitted: false }));
-  }
+  };
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
     const { username, password } = this.state;
     const { login } = this.props;
@@ -35,16 +33,13 @@ class LoginPage extends Component {
       login(username, password);
     }
     this.setState(() => ({ submitted: true }));
-  }
+  };
 
   render() {
     const { username, password, submitted } = this.state;
-    const { error, success } = this.props;
+    const { loggingIn } = this.props;
     return (
       <div className="col-md-6 col-md-offset-3">
-        {submitted && error
-          ? userService.alertUser(error, "error")
-          : userService.alertUser(success, "success")}
         <h2>Login</h2>
         <form name="form" onSubmit={this.handleSubmit}>
           <div
@@ -81,6 +76,7 @@ class LoginPage extends Component {
           </div>
           <div className="form-group">
             <button className="btn btn-primary">Login</button>
+            {userService.isLoading(loggingIn)}
             <Link to="/register" className="btn btn-link">
               Register
             </Link>
@@ -92,11 +88,14 @@ class LoginPage extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log({ state });
+  const { loggedIn, loggingIn, error, success } = state.authentication;
   return {
-    loggedIn: state.loggedIn,
     user: state.user,
-    error: state.authentication.error,
-    success: state.authentication.success
+    success,
+    loggedIn,
+    loggingIn,
+    error
   };
 }
 
