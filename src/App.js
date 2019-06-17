@@ -3,7 +3,7 @@ import { Router, Route } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute.js";
 import { history } from "./helpers";
 import { HomePage } from "./components/HomePage";
-import LoginPage from "./components/LoginPage";
+import { LoginPage } from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import AlertComponent from "./components/AlertComponent.js";
 

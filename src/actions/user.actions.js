@@ -1,7 +1,6 @@
 import { userConstants } from "../constants";
 import { userService } from "../services";
 import { alertActions } from "./";
-import { history } from "../helpers";
 
 export const userActions = {
   login,
@@ -11,10 +10,6 @@ export const userActions = {
 
 function setUserToLocalStorage(user) {
   localStorage.setItem("user", JSON.stringify(user));
-}
-
-function clearUserFromLocalStorage() {
-  localStorage.removeItem("user");
 }
 
 function login(username, password) {
@@ -48,8 +43,8 @@ function login(username, password) {
 }
 
 function logout() {
-  clearUserFromLocalStorage();
-  history.push("/login");
+  userService.logout();
+  return { type: userConstants.LOGOUT };
 }
 
 function register(user) {

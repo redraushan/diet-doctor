@@ -1,4 +1,5 @@
 import React from "react";
+import { history } from "../helpers";
 export const userService = {
   login,
   logout,
@@ -14,12 +15,14 @@ function login(username, password) {
     body: JSON.stringify({ username, password })
   };
 
+  localStorage.setItem("user", JSON.stringify({ username, password }));
   // call `/users/authenticate` with requestOptions to authenticate the login process
   return fetch("/users/authenticate", requestOptions);
 }
 
 function logout() {
   // remove user from local storage to log user out
+  localStorage.removeItem("user");
 }
 
 function register(user) {

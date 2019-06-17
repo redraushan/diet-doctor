@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { userActions } from "../actions";
 import { userService } from "../services";
 
-class LoginPage extends Component {
+class LoginPageComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -87,13 +87,11 @@ class LoginPage extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  console.log({ state });
-  const { loggedIn, loggingIn, error, success } = state.authentication;
+function mapStateToProps({ authentication, user }) {
+  const { loggingIn, error, success } = authentication || {};
   return {
-    user: state.user,
+    user,
     success,
-    loggedIn,
     loggingIn,
     error
   };
@@ -106,8 +104,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
+export const LoginPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginPage);
-export { LoginPage as TestLoginPage };
+)(LoginPageComponent);
+export { LoginPageComponent as TestLoginPage };
